@@ -17,17 +17,20 @@ from copy import deepcopy
 from search_algorithms import breadth_first_search
 
 class RoverState :
-    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False):
+    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False):
         self.loc = loc
         self.sample_extracted=sample_extracted
         self.holding_sample = holding_sample
         self.charged=charged
+        self.holding_tool=holding_tool
         self.prev = None
 
     ## you do this.
     def __eq__(self, other):
         return (self.loc == other.loc and self.sample_extracted == other.sample_extracted and
-                self.holding_sample == other.holding_sample and self.charged == other.charged)
+                self.holding_sample == other.holding_sample and self.charged == other.charged
+                and self.holding_tool == other.holding_tool)
+                
                 
 
         
@@ -61,6 +64,7 @@ def move_to_sample(state) :
     r2.loc = "sample"
     r2.prev=state
     return r2
+
 def move_to_station(state) :
     r2 = deepcopy(state)
     r2.loc = "station"
@@ -72,7 +76,25 @@ def move_to_battery(state) :
     r2.loc = "battery"
     r2.prev = state
     return r2
-# add tool functions here
+
+def pick_up_tool(state) :
+    r2 = deepcopy(state)
+    r2.holding_tool = True
+    r2.prev = state
+    return r2
+
+def drop_tool(state) :
+    r2 = deepcopy(state)
+    r2.holding_tool = False
+    r2.prev = state
+    return r2
+
+def use_tool(state) :
+    r2 = deepcopy(state)
+    if state.holding_tool and state.loc == "sample":
+        r2.sample_extracted = True
+    r2.prev = state
+    return r2
 
 
 def pick_up_sample(state) :
@@ -98,11 +120,10 @@ def charge(state) :
 
 
 action_list = [charge, drop_sample, pick_up_sample,
-               move_to_sample, move_to_battery, move_to_station]
+               move_to_sample, move_to_battery, move_to_station, pick_up_tool, use_tool, drop_tool]
 
 def battery_goal(state) :
     return state.loc == "battery"
-## add your goals here.
 
 def extracted_sample_goal(state):
     return state.sample_extracted == True
@@ -110,8 +131,14 @@ def extracted_sample_goal(state):
 def without_sample_goal(state):  
     return state.holding_sample == False
 
+def charged_goal(state):  
+    return state.charged == True
+
+def dropped_tool_goal(state):
+    return state.holding_tool == False
+
 def mission_complete(state) :
-    return battery_goal(state) and extracted_sample_goal(state) and without_sample_goal(state)
+    return (battery_goal(state) and extracted_sample_goal(state) and without_sample_goal(state) and charged_goal(state) and dropped_tool_goal(state))
 
 
 
@@ -120,6 +147,7 @@ def mission_complete(state) :
 if __name__=="__main__" :
     s = RoverState()
     result = breadth_first_search(s, action_list, mission_complete)
+    print()
     print(result)
 
 

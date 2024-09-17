@@ -4,6 +4,7 @@ from collections import deque
 
 ## We will append tuples (state, "action") in the search queue
 def breadth_first_search(startState, action_list, goal_test, use_closed_list=True) :
+    numStates = 0
     search_queue = deque()
     closed_list = {}
 
@@ -16,13 +17,16 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
         if goal_test(next_state[0]):
             print("Goal found")
             print(next_state)
+            print("Number of states generated = {}".format(numStates))
+            print()
             ptr = next_state[0]
             while ptr is not None :
                 ptr = ptr.prev
                 print(ptr)
             return next_state
-        else :
+        else : 
             successors = next_state[0].successors(action_list)
+            numStates += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
                                     if item[0] not in closed_list]
@@ -64,4 +68,4 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
 
 
 
-f
+
