@@ -149,11 +149,10 @@ def mission_complete(state) :
 if __name__=="__main__" :
     s = RoverState()
     result = breadth_first_search(s, action_list, mission_complete)
-    print()
 
     s = RoverState()
     result = depth_first_search(s, action_list, mission_complete)
     print()
 
     s = RoverState()
-    result = depth_first_search(s, action_list, mission_complete, limit=80)
+    result = depth_first_search(s, action_list, mission_complete, limit=800)
