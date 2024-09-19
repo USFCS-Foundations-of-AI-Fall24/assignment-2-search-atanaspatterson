@@ -41,5 +41,11 @@ class Graph :
     def get_edges(self, src):
         if src in self.g:
             return self.g[src]
+        
+    def __repr__(self):
+        graph_repr = ""
+        for node, edges in self.g.items():
+            graph_repr += f"{node} -> {edges}\n"
+        return graph_repr
 
 
