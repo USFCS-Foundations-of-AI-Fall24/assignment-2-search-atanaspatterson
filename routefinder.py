@@ -42,35 +42,41 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
     closed_list = {}
     num_states = 0
     search_queue.put(start_state)
+    graph = start_state.mars_graph
 
     if use_closed_list :
         closed_list[start_state] = True
-    # below lines are testing
-    next_state = search_queue.get()
-    successors = next_state.mars_graph.get_edges()
-    print(successors)
     
-    while len(search_queue) > 0:
-        ## this is a (state, "action") tuple
+    while not search_queue.empty():
         next_state = search_queue.get()
         if goal_test(next_state):
             print("Goal found")
             print(next_state)
-            print("Number of states generated = {}".format(numStates))
+            print()
+            ptr = next_state.prev_state
+            while ptr is not None :
+                print(ptr)
+                ptr = ptr.prev_state
+            print("Number of states generated = {}".format(num_states))
             return next_state
         else : 
-            successors = next_state.mars_graph.get_edges()
-            print(successors)
-            numStates += len(successors)
+            edges = next_state.mars_graph.get_edges(Node(next_state.location))
+            successors = []
+            for edge in edges: # create new state, append f and the state to successors
+                new_state = map_state(location=edge.dest, mars_graph=graph, prev_state=next_state)
+                new_state.g = next_state.g + edge.val 
+                new_state.h = heuristic_fn(new_state)
+                new_state.f = new_state.g + new_state.h
+                successors.append((new_state.f, new_state))
+            num_states += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
-                                    if item[0] not in closed_list]
+                                    if item[1] not in closed_list]
                 for s in successors :
-                    closed_list[s[0]] = True
-            search_queue.extend(successors)
+                    closed_list[s[1]] = True
+            for successor in successors:
+                search_queue.put(successor[1])
 
-
-    ## you do the rest.
 
 
 ## default heuristic - we can use this to implement uniform cost search
@@ -109,8 +115,12 @@ if __name__=="__main__" :
     test_state = map_state()
     # print(test_state.mars_graph)
     test_state.location = "4,6"
-    print(sld(test_state))
-    print(a_star(test_state, h1, test_state.is_goal))
+    # print(sld(test_state))
+    test_state.location = "8,8"
+    goal_test = lambda state: state.is_goal()# had to find online - didn't work normally
+    a_star(test_state, sld, goal_test)
+
+    a_star(test_state, h1, goal_test)
     
         
 
