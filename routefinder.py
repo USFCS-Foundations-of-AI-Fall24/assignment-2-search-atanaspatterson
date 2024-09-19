@@ -117,9 +117,8 @@ if __name__=="__main__" :
     test_state.location = "4,6"
     # print(sld(test_state))
     test_state.location = "8,8"
-    goal_test = lambda state: state.is_goal()# had to find online - didn't work normally
+    goal_test = lambda state: state.is_goal() # had to find online - didn't work normally
     a_star(test_state, sld, goal_test)
-
     a_star(test_state, h1, goal_test)
     
         

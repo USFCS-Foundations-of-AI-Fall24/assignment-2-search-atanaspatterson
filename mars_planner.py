@@ -33,12 +33,6 @@ class RoverState :
                 self.holding_sample == other.holding_sample and self.charged == other.charged
                 and self.holding_tool == other.holding_tool)
                 
-                
-
-        
-        
-
-
     def __repr__(self):
         return (f"Location: {self.loc}\n" +
                 f"Sample Extracted?: {self.sample_extracted}\n"+
@@ -142,6 +136,15 @@ def dropped_tool_goal(state):
 def mission_complete(state) :
     return (battery_goal(state) and extracted_sample_goal(state) and without_sample_goal(state) and charged_goal(state) and dropped_tool_goal(state))
 
+def move_to_sample_goal(state):
+    return state.loc == "sample"
+
+def remove_sample_goal(state):
+    return state.holding_sample == True and state.sample_extracted == True
+
+def return_to_charger_goal(state):
+    return state.loc == "battery" and state.charged == True
+
 
 
 
@@ -156,3 +159,10 @@ if __name__=="__main__" :
 
     s = RoverState()
     result = depth_first_search(s, action_list, mission_complete, limit=800)
+    print()
+    print("Testing 3 Subproblems")
+
+    s = RoverState()
+    result = breadth_first_search(s, action_list, move_to_sample_goal)
+    result = breadth_first_search(result[0], action_list, remove_sample_goal)
+    result = breadth_first_search(result[0], action_list, return_to_charger_goal)
