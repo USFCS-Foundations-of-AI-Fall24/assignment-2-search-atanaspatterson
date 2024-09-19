@@ -19,10 +19,10 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
             print(next_state)
             print("Number of states generated = {}".format(numStates))
             print()
-            # ptr = next_state[0]
-            # while ptr is not None :
-            #     ptr = ptr.prev
-            #     print(ptr)
+            ptr = next_state[0]
+            while ptr is not None :
+                ptr = ptr.prev
+                print(ptr)
             return next_state
         else : 
             successors = next_state[0].successors(action_list)
@@ -57,10 +57,10 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
             print("Goal found")
             print(next_state)
             print("Number of states generated = {}".format(numStates))
-            # ptr = next_state[0]
-            # while ptr is not None :
-            #     ptr = ptr.prev
-            #     print(ptr)
+            ptr = next_state[0]
+            while ptr is not None :
+                ptr = ptr.prev
+                print(ptr)
             return next_state
         else :
             successors = next_state[0].successors(action_list)

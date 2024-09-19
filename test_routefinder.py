@@ -8,8 +8,9 @@ class Testmap_state(TestCase):
         print(s1 < s2)
         self.assertLessEqual(s1,s2)
 
-
+    # I believe this test is wrong? The map starts with no location to use sld with
+    # Changed it to be correct (in my opinion)
     def test_sld(self) :
-        s1 = map_state(g = 1,h=1)
+        s1 = map_state(location="15,1", g = 1, h = 1)
         val = sld(s1)
         self.assertLessEqual(val, 14)

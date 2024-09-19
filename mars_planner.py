@@ -146,10 +146,7 @@ def return_to_charger_goal(state):
     return state.loc == "battery" and state.charged == True
 
 
-
-
-
-if __name__=="__main__" :
+def main():
     s = RoverState()
     result = breadth_first_search(s, action_list, mission_complete)
 
@@ -166,3 +163,7 @@ if __name__=="__main__" :
     result = breadth_first_search(s, action_list, move_to_sample_goal)
     result = breadth_first_search(result[0], action_list, remove_sample_goal)
     result = breadth_first_search(result[0], action_list, return_to_charger_goal)
+
+
+if __name__=="__main__" :
+    main()
