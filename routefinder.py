@@ -85,9 +85,7 @@ def h1(state) :
 
 ## you do this - return the straight-line distance between the state and (1,1)
 def sld(state) :
-    print(f'location = {state.location}')
     coordinates = state.location.split(",")
-    
     
     return sqrt((int(coordinates[0]) - 1) ** 2 + ((int(coordinates[1]) - 1) ** 2))
 
