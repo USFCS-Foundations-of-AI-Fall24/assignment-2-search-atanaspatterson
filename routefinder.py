@@ -41,14 +41,15 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
     search_queue = PriorityQueue()
     closed_list = {}
     num_states = 0
-    search_queue.put(start_state)
+    search_queue.put((start_state.f, start_state))
     graph = start_state.mars_graph
 
     if use_closed_list :
         closed_list[start_state] = True
     
     while not search_queue.empty():
-        next_state = search_queue.get()
+        polled = search_queue.get()
+        next_state = polled[1]
         if goal_test(next_state):
             print("Goal found")
             print(next_state)
@@ -68,14 +69,14 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
                 new_state.h = heuristic_fn(new_state)
                 new_state.f = new_state.g + new_state.h
                 successors.append((new_state.f, new_state))
-            num_states += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
                                     if item[1] not in closed_list]
                 for s in successors :
                     closed_list[s[1]] = True
+            num_states += len(successors)
             for successor in successors:
-                search_queue.put(successor[1])
+                search_queue.put(successor)
 
 
 
